@@ -1,0 +1,1 @@
+mvn clean compile dependency:copy-dependencies -DstripVersion

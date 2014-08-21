@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<infinispan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:infinispan:config:5.2 http://www.infinispan.org/schemas/infinispan-config-5.2.xsd" xmlns="urn:infinispan:config:5.2">
+
+   <global>
+      <evictionScheduledExecutor factory="org.infinispan.executors.DefaultScheduledExecutorFactory">
+         <properties>
+            <property name="threadNamePrefix" value="EvictionThread"></property>
+         </properties>
+      </evictionScheduledExecutor>
+
+      <globalJmxStatistics jmxDomain="platform.insp.cache.template" enabled="true" allowDuplicateDomains="true"></globalJmxStatistics>
+
+      <transport transportClass="org.infinispan.remoting.transport.jgroups.JGroupsTransport" clusterName="JCR-cluster" distributedSyncTimeout="20000">
+         <properties>
+            <property name="configurationFile" value="udp-mux.xml"></property>
+         </properties>
+      </transport>
+   </global>
+
+   <default>
+      <clustering mode="replication">
+         <stateTransfer timeout="20000" fetchInMemoryState="false"></stateTransfer>
+         <sync replTimeout="20000"></sync>
+      </clustering>
+
+      <locking isolationLevel="READ_COMMITTED" lockAcquisitionTimeout="20000" writeSkewCheck="false" concurrencyLevel="500" useLockStriping="false"></locking>
+      <transaction syncRollbackPhase="true" syncCommitPhase="true" transactionMode="TRANSACTIONAL"></transaction>
+      <jmxStatistics enabled="true"></jmxStatistics>
+      <eviction strategy="LIRS" threadPolicy="DEFAULT" maxEntries="1000000"></eviction>
+      <expiration wakeUpInterval="5000"></expiration>
+      <deadlockDetection enabled="true" spinDuration="1000"></deadlockDetection>
+   </default>
+</infinispan>

@@ -1,0 +1,15 @@
+target
+release.properties
+*.versionsBackup
+*.releaseBackup
+.idea
+*.iml
+*.ipr
+*.iws
+.DS_Store
+.project
+.classpath
+.settings
+.metadata
+.directory
+component/web/resources/transaction.log
