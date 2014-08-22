@@ -34,6 +34,8 @@ public class TestConcurrentPut
     // The default total amount of threads knowing that in udp-mux.xml,
     // thread_pool.max_threads and oob_thread_pool.max_threads have been set to 20
     private static final int DEFAULT_TOTAL_THREADS = 20;
+    // Volatile time variables shared between all threads to get measures of each iteration, no matter in which thread
+    private static volatile long time, newTime;
 
     public static void main(final String... args) throws Exception
     {
@@ -74,14 +76,20 @@ public class TestConcurrentPut
                     e1.printStackTrace();
                     return;
                 }
+                time = System.currentTimeMillis();
                 while (true)
                 {
                     try
                     {
                         String value = cache.get("a");
                         long call = counter.incrementAndGet();
-                        if ((call % 1000) == 0)
-                            System.out.println(call + ". " + Thread.currentThread() + ": a=" + value + " from " + nodeId);
+
+                        if ((call % 1000) == 0) {
+                            newTime = System.currentTimeMillis();
+                            long iterationTime= newTime - time;
+                            System.out.println(call + ". " + Thread.currentThread() + ": a=" + value + " from " + nodeId + " Iteration: " + iterationTime + " ms");
+                            time = newTime;
+                        }
                         cache.put("a", nodeId);
                         Thread.sleep(20);
                     }
